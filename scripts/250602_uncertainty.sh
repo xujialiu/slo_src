@@ -1,0 +1,75 @@
+CUDA_VISIBLE_DEVICES=0 python train_multiscale.py \
+--eval \
+--result_root_path "./SLO_results/uncertainty_250601" \
+--result_name "other_diseases" \
+--fusion_layer_num 8 \
+--model vit_large_patch16_multiscales \
+--loss_type uncertainty_new \
+--dataset_type slo \
+--clip_grad 1 \
+--num_patches "[(3,3), (2,2), (1,1)]" \
+--lora_rank 8 \
+--lora_alpha 16 \
+--blr 1e-3 \
+--layer_decay 0.65 \
+--drop_path 0.1 \
+--epochs 50 \
+--random_crop_perc 0.9 \
+--nb_classes 4 \
+--finetune "/data_A/xujialiu/projects/FMUE_SLO/SLO_results/stdr_bode_uncertainty_250522/stdr_bode_icdr_deepuwf_uncertainty_1344_4cls_20250523_1516/checkpoints/checkpoint_22.pth" \
+--data_path "/data_A/xujialiu/datasets/UWF_datasets" \
+--csv_path "/data_A/xujialiu/datasets/bode/250530_get_model_tabular_data/icdr4_other_diseases_250530.csv" \
+--input_size "[1344,1344]" \
+--fm_input_size 448 \
+--batch_size 1
+
+
+CUDA_VISIBLE_DEVICES=0 python train_multiscale.py \
+--eval \
+--result_root_path "./SLO_results/uncertainty_250601" \
+--result_name "in_distribution" \
+--fusion_layer_num 8 \
+--model vit_large_patch16_multiscales \
+--loss_type uncertainty_new \
+--dataset_type slo \
+--clip_grad 1 \
+--num_patches "[(3,3), (2,2), (1,1)]" \
+--lora_rank 8 \
+--lora_alpha 16 \
+--blr 1e-3 \
+--layer_decay 0.65 \
+--drop_path 0.1 \
+--epochs 50 \
+--random_crop_perc 0.9 \
+--nb_classes 4 \
+--finetune "/data_A/xujialiu/projects/FMUE_SLO/SLO_results/stdr_bode_uncertainty_250522/stdr_bode_icdr_deepuwf_uncertainty_1344_4cls_20250523_1516/checkpoints/checkpoint_22.pth" \
+--data_path "/data_A/xujialiu/datasets/UWF_datasets" \
+--csv_path "/data_A/xujialiu/datasets/UWF_datasets/tabular_data/stdr_bode_icdr_add_nv_prh_combine_01_250509.csv" \
+--input_size "[1344,1344]" \
+--fm_input_size 448 \
+--batch_size 1
+
+CUDA_VISIBLE_DEVICES=0 python train_multiscale.py \
+--eval \
+--result_root_path "./SLO_results/uncertainty_250601" \
+--result_name "in_distribution_jp" \
+--fusion_layer_num 8 \
+--model vit_large_patch16_multiscales \
+--loss_type uncertainty_new \
+--dataset_type slo \
+--clip_grad 1 \
+--num_patches "[(3,3), (2,2), (1,1)]" \
+--lora_rank 8 \
+--lora_alpha 16 \
+--blr 1e-3 \
+--layer_decay 0.65 \
+--drop_path 0.1 \
+--epochs 50 \
+--random_crop_perc 0.9 \
+--nb_classes 4 \
+--finetune "/data_A/xujialiu/projects/FMUE_SLO/SLO_results/stdr_bode_uncertainty_250522/stdr_bode_icdr_deepuwf_uncertainty_1344_4cls_20250523_1516/checkpoints/checkpoint_22.pth" \
+--data_path "/data_A/xujialiu/datasets/UWF_external/Tsukazaki" \
+--csv_path "/data_A/xujialiu/datasets/UWF_external/000000_prepare_external_validation/Tsukazaki.csv" \
+--input_size "[1344,1344]" \
+--fm_input_size 448 \
+--batch_size 1
