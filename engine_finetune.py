@@ -226,8 +226,8 @@ def evaluate(args, data_loader, model, device, epoch, mode, num_class):
 
     for idx, batch in enumerate(metric_logger.log_every(data_loader, 10, header)):
         
-        if idx > 100:
-            break
+        # if idx > 100:
+        #     break
         
         image = batch[0]
         target = batch[-1]
