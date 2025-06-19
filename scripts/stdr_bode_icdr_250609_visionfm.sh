@@ -1,0 +1,50 @@
+# visionfm 4 classes
+nohup env CUDA_VISIBLE_DEVICES=0 python train_multiscale.py \
+--result_root_path "./SLO_results/stdr_bode_250609" \
+--result_name "stdr_bode_icdr_visionfm_2240_4cls" \
+--fusion_layer_num 8 \
+--model vit_base_patch16_multiscales \
+--dataset_type slo \
+--clip_grad 1 \
+--num_patches "[(10,10),(9,9),(8,8),(7,7),(6,6),(5,5),(4,4),(3,3),(2,2),(1,1)]" \
+--lora_rank 8 \
+--lora_alpha 16 \
+--blr 1e-3 \
+--layer_decay 0.65 \
+--drop_path 0.1 \
+--epochs 50 \
+--random_crop_perc 0.9 \
+--nb_classes 4 \
+--finetune "/data_A/xujialiu/checkpoints/foundation_model_weights/my_VFM_Fundus_weights.pth" \
+--data_path "/data_A/xujialiu/datasets/UWF_datasets" \
+--loss_type "cross_entropy" \
+--csv_path "/data_A/xujialiu/datasets/UWF_datasets/250530_get_model_tabular_data/icdr4_250530.csv" \
+--input_size "[2240,2240]" \
+--fm_input_size 224 \
+--batch_size 1 \
+--accum_iter 32 > ./SLO_results/stdr_bode_250609/stdr_bode_icdr_visionfm_2240_4cls_`date +%Y%m%d_%H%M`.log 2>&1 &
+
+nohup env CUDA_VISIBLE_DEVICES=0 python train_multiscale.py \
+--result_root_path "./SLO_results/stdr_bode_250609" \
+--result_name "stdr_bode_icdr_visionfm_2240_dme" \
+--fusion_layer_num 8 \
+--model vit_base_patch16_multiscales \
+--dataset_type slo \
+--clip_grad 1 \
+--num_patches "[(10,10),(9,9),(8,8),(7,7),(6,6),(5,5),(4,4),(3,3),(2,2),(1,1)]" \
+--lora_rank 8 \
+--lora_alpha 16 \
+--blr 1e-3 \
+--layer_decay 0.65 \
+--drop_path 0.1 \
+--epochs 50 \
+--random_crop_perc 0.9 \
+--nb_classes 2 \
+--finetune "/data_A/xujialiu/checkpoints/foundation_model_weights/my_VFM_Fundus_weights.pth" \
+--data_path "/data_A/xujialiu/datasets/UWF_datasets" \
+--loss_type "cross_entropy" \
+--csv_path "/data_A/xujialiu/datasets/UWF_datasets/250530_get_model_tabular_data/dme_250530.csv" \
+--input_size "[2240,2240]" \
+--fm_input_size 224 \
+--batch_size 1 \
+--accum_iter 32 > ./SLO_results/stdr_bode_250609/stdr_bode_icdr_visionfm_2240_dme_`date +%Y%m%d_%H%M`.log 2>&1 &
