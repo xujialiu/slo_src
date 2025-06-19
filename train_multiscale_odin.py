@@ -437,6 +437,12 @@ def get_args_parser():
         action="store_true",
         help="Save best checkpoint during training (default: False)",
     )
+    
+    parser.add_argument(
+        "--test_name",
+        default="test",
+        help="test name (default: test)",
+    )
 
     return parser
 
@@ -472,7 +478,7 @@ def main(args):
         dataset_val = build_dataset(is_train="val", args=args)
 
     if args.eval:
-        dataset_test = build_dataset(is_train="test", args=args)
+        dataset_test = build_dataset(is_train=args.test_name, args=args)
 
     num_tasks = misc.get_world_size()
     global_rank = misc.get_rank()
@@ -743,21 +749,6 @@ def main(args):
     )
 
     if args.eval:
-        # (
-        #     test_stats,
-        #     test_auc_roc,
-        #     test_acc,
-        #     (test_output_loss_total, test_output_loss_un, test_output_loss_ce),
-        # ) = evaluate(
-        #     args=args,
-        #     data_loader=data_loader_test,
-        #     model=model,
-        #     device=device,
-        #     epoch=0,
-        #     mode="test",
-        #     num_class=args.nb_classes,
-        # )
-        
         test(
             args=args,
             data_loader=data_loader_test,

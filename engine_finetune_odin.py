@@ -460,8 +460,8 @@ def test(args, data_loader, model, device, epoch, mode, num_class):
     model.eval()
 
     for idx, batch in enumerate(metric_logger.log_every(data_loader, 10, header)):
-        if idx > 100:
-            break
+        # if idx > 100:
+        #     break
 
         image = batch[0]
         target = batch[-1]
@@ -556,8 +556,8 @@ def test(args, data_loader, model, device, epoch, mode, num_class):
     header = "Test:"
 
     for idx, batch in enumerate(metric_logger.log_every(data_loader, 10, header)):
-        if idx > 100:
-            break
+        # if idx > 100:
+        #     break
 
         images, targets = batch[0].to(device), batch[-1].to(device)
         batch_size = images.shape[0]
