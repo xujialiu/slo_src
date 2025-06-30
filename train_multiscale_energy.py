@@ -499,9 +499,6 @@ def main(args):
         dataset_val_in = build_dataset_in(is_train="all", args=args)
         dataset_val_out = build_dataset_out(is_train="all", args=args)
     else:
-        args.csv_path_out = args.csv_path
-        args.data_path_out = args.data_path
-
         dataset_train_in = build_dataset_in(is_train="train", args=args)
         dataset_val_in = build_dataset_in(is_train="val", args=args)
         dataset_train_out = build_dataset_out(is_train="train", args=args)
