@@ -78,9 +78,9 @@ def get_args_parser():
     parser.add_argument(
         "--drop_path",
         type=float,
-        default=0.2,
+        default=0,
         metavar="PCT",
-        help="Drop path rate (default: 0.2)",
+        help="Drop path rate (default: 0)",
     )
 
     # Optimizer parameters
