@@ -1,6 +1,7 @@
 import torch
 from torch import Tensor, nn
 from torch.nn.modules.dropout import _DropoutNd
+from typing import List
 
 
 class MCDropout(nn.Module):
@@ -84,13 +85,46 @@ class MCDropout(nn.Module):
         """
         if self.training:
             return self.core_model(x)
-        if self.on_batch:
-            x = x.repeat(self.num_estimators, 1, 1, 1)
-            return self.core_model(x)
 
-        return torch.cat(
-            [self.core_model(x) for _ in range(self.num_estimators)], dim=0
-        )
+        if self.on_batch:
+            b = x.shape[0]
+            x_ori = x.clone()
+
+            list_y_final = []
+            list_uncertainty = []
+
+            for i in range(b):
+                x_ = x[i]
+
+                x_ = x_.repeat(self.num_estimators, 1, 1, 1)
+                y = self.core_model(x_)
+
+                y_pred = y.argmax(dim=-1)
+
+                y_pred_mode, counts = torch.unique(y_pred, return_counts=True)
+
+                y_idx = torch.where(y_pred == y_pred_mode[0])[0]
+
+                y_final = y[y_idx, :].mean(dim=0)
+
+                uncertainty = counts[0] / self.num_estimators
+
+                list_y_final.append(y_final)
+                list_uncertainty.append(uncertainty)
+
+            y = torch.stack(list_y_final, dim=0)
+            uncertainty = torch.stack(list_uncertainty, dim=0)
+
+            return y, uncertainty
+
+        # return torch.cat(
+        #     [self.core_model(x) for _ in range(self.num_estimators)], dim=0
+        # )
+
+        # values, counts = torch.unique(x, return_counts=True)
+        # return torch.cat(
+        #     [self.core_model(x) for _ in range(self.num_estimators)], dim=0
+        # )
 
 
 def mc_dropout(
@@ -118,7 +152,7 @@ def mc_dropout(
     )
 
 
-def _dropout_checks(filtered_modules: list[nn.Module], num_estimators: int) -> None:
+def _dropout_checks(filtered_modules: List[nn.Module], num_estimators: int) -> None:
     if not filtered_modules:
         raise ValueError(
             "No dropout module found in the model. "
@@ -131,3 +165,8 @@ def _dropout_checks(filtered_modules: list[nn.Module], num_estimators: int) -> N
         raise ValueError(
             "`num_estimators` must be strictly positive to use MC Dropout."
         )
+
+
+def mode(tensor):
+    counts = torch.bincount(tensor.flatten())
+    return torch.argmax(counts).item()
