@@ -56,7 +56,6 @@ def edl_loss(func, y, alpha, epoch_num, num_classes, annealing_step, device=None
 def un_loss(
     target, alpha, num_classes, epoch_num, annealing_step, device=None, reduce=True
 ):
-
     if reduce:
         loss = torch.mean(
             edl_loss(
@@ -98,16 +97,17 @@ class UncertaintyAwareLoss(torch.nn.Module):
 
         total_loss = ce_loss - self.lambda_entropy * entropy_penalty.mean()
         return total_loss
-    
+
+
 class UncertaintyAwareLoss(torch.nn.Module):
-    def __init__(self, lambda_entropy=0.1, reduction='mean'):
+    def __init__(self, lambda_entropy=0.1, reduction="mean"):
         super().__init__()
         self.lambda_entropy = lambda_entropy
         self.reduction = reduction
 
     def forward(self, logits, labels):
         # 标准交叉熵损失 - 不进行reduction
-        ce_loss = F.cross_entropy(logits, labels, reduction='none')  # [batch]
+        ce_loss = F.cross_entropy(logits, labels, reduction="none")  # [batch]
 
         # 对DR类别（0-3）的预测添加熵正则化
         probs = F.softmax(logits, dim=1)
@@ -122,13 +122,13 @@ class UncertaintyAwareLoss(torch.nn.Module):
 
         # 计算每个样本的总损失
         total_loss = ce_loss - self.lambda_entropy * entropy_penalty  # [batch]
-        
+
         # 根据reduction参数决定返回格式
-        if self.reduction == 'none':
+        if self.reduction == "none":
             return total_loss  # [batch]
-        elif self.reduction == 'mean':
+        elif self.reduction == "mean":
             return total_loss.mean()  # 标量
-        elif self.reduction == 'sum':
+        elif self.reduction == "sum":
             return total_loss.sum()  # 标量
         else:
             raise ValueError(f"Invalid reduction mode: {self.reduction}")
@@ -167,7 +167,6 @@ def train(
             header,
         )
     ):
-
         # we use a per iteration (instead of per epoch) lr scheduler
         if data_iter_step % accum_iter == 0:
             lr_sched.adjust_learning_rate(
@@ -212,7 +211,12 @@ def train(
                 # loss_ce = criterion(prob, targets)
 
                 loss_un = un_loss(
-                    targets, alpha, args.nb_classes, epoch, args.epochs, device
+                    targets,
+                    alpha,
+                    args.nb_classes,
+                    epoch,
+                    args.epochs,
+                    device,
                 )
                 loss = loss_un
 
@@ -346,8 +350,6 @@ def evaluate(args, data_loader, model, device, epoch, mode, num_class):
                 # uncertainty = K/(S * (S + 1)), K是类别数
                 K = torch.tensor(args.nb_classes).to(device, non_blocking=True)
                 uncertainty = (K / S).squeeze(1)  # shape: [batch_size, 1]
-
-                loss_ce = criterion(pred, target)
 
                 loss_un = un_loss(
                     target,

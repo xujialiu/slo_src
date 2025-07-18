@@ -437,6 +437,12 @@ def get_args_parser():
         action="store_true",
         help="Save best checkpoint during training (default: False)",
     )
+    
+    parser.add_argument(
+        "--test_name",
+        default="test",
+        help="test name (default: test)",
+    )
 
     return parser
 
@@ -472,7 +478,7 @@ def main(args):
         dataset_val = build_dataset(is_train="val", args=args)
 
     if args.eval:
-        dataset_test = build_dataset(is_train="test", args=args)  # 注意: 必要时换成test
+        dataset_test = build_dataset(is_train=args.test_name, args=args)  # 注意: 必要时换成test
 
     num_tasks = misc.get_world_size()
     global_rank = misc.get_rank()
