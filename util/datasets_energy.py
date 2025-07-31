@@ -1,3 +1,4 @@
+import random
 from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 import pandas as pd
@@ -170,9 +171,10 @@ def build_transform_slo(is_train, args):
                 ]
             )
         elif args.random_crop_perc != 1:
+            crop_perc = random.uniform(args.random_crop_perc, 1.0)
             image_height, image_width = (
-                int(height // args.random_crop_perc) + 1,
-                int(width // args.random_crop_perc) + 1,
+                int(height // crop_perc) + 1,
+                int(width // crop_perc) + 1,
             )
             transform = A.Compose(
                 [
@@ -188,8 +190,8 @@ def build_transform_slo(is_train, args):
                         interpolation=cv2.INTER_CUBIC,
                     ),
                     A.RandomCrop(
-                        height=int(image_height * args.random_crop_perc),
-                        width=int(image_width * args.random_crop_perc),
+                        height=int(image_height * crop_perc),
+                        width=int(image_width * crop_perc),
                     ),
                     A.Resize(height=height, width=width, interpolation=cv2.INTER_CUBIC),
                     A.CenterCrop(height=height, width=width),
@@ -224,15 +226,6 @@ def build_transform_slo(is_train, args):
         # eval transform
         transform = A.Compose(
             [
-                A.Resize(
-                    height=height,
-                    width=width,
-                    interpolation=cv2.INTER_CUBIC,
-                ),
-                A.CenterCrop(
-                    height=int(height * args.random_crop_perc),
-                    width=int(width * args.random_crop_perc),
-                ),
                 A.Resize(
                     height=height,
                     width=width,
@@ -287,9 +280,10 @@ def build_transform_fp(is_train, args):
                 ]
             )
         elif args.random_crop_perc != 1:
+            crop_perc = random.uniform(args.random_crop_perc, 1.0)
             image_height, image_width = (
-                int(height // args.random_crop_perc) + 1,
-                int(width // args.random_crop_perc) + 1,
+                int(height // crop_perc) + 1,
+                int(width // crop_perc) + 1,
             )
             transform = A.Compose(
                 [
@@ -305,8 +299,8 @@ def build_transform_fp(is_train, args):
                         interpolation=cv2.INTER_CUBIC,
                     ),
                     A.RandomCrop(
-                        height=int(image_height * args.random_crop_perc),
-                        width=int(image_width * args.random_crop_perc),
+                        height=int(image_height * crop_perc),
+                        width=int(image_width * crop_perc),
                     ),
                     A.Resize(height=height, width=width, interpolation=cv2.INTER_CUBIC),
                     A.CenterCrop(height=height, width=width),
@@ -335,15 +329,6 @@ def build_transform_fp(is_train, args):
         # eval transform
         transform = A.Compose(
             [
-                A.Resize(
-                    height=height,
-                    width=width,
-                    interpolation=cv2.INTER_CUBIC,
-                ),
-                A.CenterCrop(
-                    height=int(height * args.random_crop_perc),
-                    width=int(width * args.random_crop_perc),
-                ),
                 A.Resize(
                     height=height,
                     width=width,
