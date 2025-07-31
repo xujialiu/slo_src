@@ -468,6 +468,32 @@ def get_args_parser():
         default=-7.0,
         help="margin for out-distribution; below this value will be penalized",
     )
+    
+    # mc_dropout
+    parser.add_argument(
+        "--mc_dropout",
+        action="store_true",
+        default=True,
+        help="Enable MC Dropout for uncertainty estimation",
+    )
+    parser.add_argument(
+        "--num_estimators",
+        type=int,
+        default=11,
+        help="Number of forward passes for MC Dropout",
+    )
+    parser.add_argument(
+        "--last_layer",
+        action="store_true",
+        default=False,
+        help="Apply dropout only to the last layer",
+    )
+    parser.add_argument(
+        "--on_batch",
+        action="store_true",
+        default=True,
+        help="Apply MC Dropout on batch level",
+    )
 
     return parser
 
@@ -752,10 +778,10 @@ def main(args):
         if param.requires_grad:
             print(name)
 
-    args.mc_dropout = True
-    args.num_estimators = 11
-    args.last_layer = False
-    args.on_batch = True
+    # args.mc_dropout = True
+    # args.num_estimators = 11
+    # args.last_layer = False
+    # args.on_batch = True
 
     model = MCDropout(
         model=model,

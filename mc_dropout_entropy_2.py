@@ -109,16 +109,6 @@ class MCDropout(nn.Module):
 
             return logists_final, list_uncertainty
 
-        # return torch.cat(
-        #     [self.core_model(x) for _ in range(self.num_estimators)], dim=0
-        # )
-
-        # values, counts = torch.unique(x, return_counts=True)
-        # return torch.cat(
-        #     [self.core_model(x) for _ in range(self.num_estimators)], dim=0
-        # )
-
-
 def mc_dropout(
     model: nn.Module,
     num_estimators: int,
