@@ -334,7 +334,7 @@ def evaluate(args, data_loader, model, device, epoch, mode, num_class):
 
         batch_size = image.shape[0]
         metric_logger.update(loss=loss.mean().item())
-        metric_logger.meters["acc"].update(acc.item(), n=batch_size)
+        metric_logger.meters["acc"].update(acc, n=batch_size)
 
     metric_logger.synchronize_between_processes()
 
